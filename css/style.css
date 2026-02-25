@@ -1,0 +1,670 @@
+/* ============================================================
+   神秘塔罗 · Mystic Tarot — 样式表
+   ============================================================ */
+
+/* ── CSS 变量 ──────────────────────────────────────────────── */
+:root {
+  --bg-primary:    #0a0a1e;
+  --bg-secondary:  #12092e;
+  --bg-card:       #1a1040;
+  --gold:          #c9a84c;
+  --gold-light:    #f0d080;
+  --gold-dim:      #7a6030;
+  --silver:        #e0d8f5;
+  --silver-dim:    #9890b8;
+  --purple:        #6b3fa0;
+  --purple-light:  #9b6fd0;
+  --card-back-bg:  #0f0828;
+  --card-border:   #c9a84c;
+  --text-primary:  #e0d8f5;
+  --text-dim:      #9890b8;
+  --radius:        12px;
+  --transition:    0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── 重置 & 基础 ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Noto Serif SC', 'SimSun', serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ── 星空背景 Canvas ──────────────────────────────────────── */
+#starfield {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── 主应用容器 ───────────────────────────────────────────── */
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Phase 切换 ───────────────────────────────────────────── */
+.phase {
+  display: none;
+  width: 100%;
+  max-width: 960px;
+  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.6s ease;
+}
+.phase.active { display: flex; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Phase 1: Landing ─────────────────────────────────────── */
+#phase-landing {
+  justify-content: center;
+  min-height: 100vh;
+  gap: 28px;
+  text-align: center;
+  padding-top: 60px;
+}
+
+/* 月相装饰 */
+.moon-deco {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+}
+.moon-deco::before {
+  content: '';
+  display: block;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f0e0a0, #c9a84c 40%, #6b3fa0 75%, transparent);
+  box-shadow: 0 0 30px rgba(201,168,76,0.4), 0 0 60px rgba(107,63,160,0.3);
+}
+.moon-deco::after {
+  content: '';
+  position: absolute;
+  top: 6px; left: 16px;
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  opacity: 0.35;
+}
+
+/* 标题 */
+.title-cn {
+  font-family: 'Cinzel', 'SimSun', serif;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  letter-spacing: 0.2em;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--purple-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+}
+.title-en {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.7rem, 2vw, 1rem);
+  letter-spacing: 0.4em;
+  color: var(--silver-dim);
+  text-transform: uppercase;
+  margin-top: -8px;
+}
+.title-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--gold-dim);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+}
+.title-divider::before, .title-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  max-width: 120px;
+}
+
+/* 牌阵选择器 */
+.spread-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.spread-label {
+  font-size: 0.85rem;
+  color: var(--silver-dim);
+  letter-spacing: 0.1em;
+}
+.spread-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.spread-btn {
+  padding: 10px 22px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 24px;
+  background: transparent;
+  color: var(--silver-dim);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: 0.08em;
+}
+.spread-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold-light);
+  background: rgba(201,168,76,0.08);
+  box-shadow: 0 0 12px rgba(201,168,76,0.2);
+}
+.spread-btn.active {
+  border-color: var(--gold);
+  color: var(--gold-light);
+  background: rgba(201,168,76,0.12);
+  box-shadow: 0 0 16px rgba(201,168,76,0.3);
+}
+
+/* 主操作按钮 */
+.btn-primary {
+  padding: 14px 44px;
+  border: 1px solid var(--gold);
+  border-radius: 32px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(107,63,160,0.15));
+  color: var(--gold-light);
+  font-family: 'Cinzel', 'Noto Serif SC', serif;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(107,63,160,0.2));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary:hover {
+  box-shadow: 0 0 20px rgba(201,168,76,0.4), 0 0 40px rgba(107,63,160,0.2);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  padding: 10px 28px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 24px;
+  background: transparent;
+  color: var(--silver-dim);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-secondary:hover {
+  border-color: var(--gold);
+  color: var(--gold-light);
+}
+
+/* ── Phase 2: Selection ───────────────────────────────────── */
+#phase-selection {
+  padding-top: 50px;
+  gap: 32px;
+}
+
+.selection-header {
+  text-align: center;
+}
+.guide-text {
+  color: var(--silver-dim);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+.spread-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* 牌阵网格 */
+.card-spread {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  width: 100%;
+}
+
+/* 单张牌包装器 */
+.card-wrapper {
+  perspective: 1200px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* 凯尔特十字特殊布局 */
+.card-spread.celtic-layout {
+  display: grid;
+  grid-template-areas:
+    ". a . . e ."
+    "d b c . f ."
+    ". g . . h ."
+    ". . . . i ."
+    ". . . . j .";
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  max-width: 600px;
+}
+.card-spread.celtic-layout .card-wrapper:nth-child(1) { grid-area: a; }
+.card-spread.celtic-layout .card-wrapper:nth-child(2) { grid-area: b; transform-origin: center; }
+.card-spread.celtic-layout .card-wrapper.cross-card   { transform: rotate(90deg); }
+.card-spread.celtic-layout .card-wrapper:nth-child(3) { grid-area: c; }
+.card-spread.celtic-layout .card-wrapper:nth-child(4) { grid-area: d; }
+.card-spread.celtic-layout .card-wrapper:nth-child(5) { grid-area: e; }
+.card-spread.celtic-layout .card-wrapper:nth-child(6) { grid-area: f; }
+.card-spread.celtic-layout .card-wrapper:nth-child(7) { grid-area: g; }
+.card-spread.celtic-layout .card-wrapper:nth-child(8) { grid-area: h; }
+.card-spread.celtic-layout .card-wrapper:nth-child(9) { grid-area: i; }
+.card-spread.celtic-layout .card-wrapper:nth-child(10){ grid-area: j; }
+
+/* 牌的尺寸 */
+.card-inner {
+  position: relative;
+  width: 90px;
+  height: 150px;
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 三张牌时稍大 */
+.spread-three .card-inner { width: 110px; height: 180px; }
+/* 单张牌时最大 */
+.spread-single .card-inner { width: 130px; height: 210px; }
+
+.card-inner.flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  width: 100%; height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* 牌背 */
+.card-back {
+  background: var(--card-back-bg);
+  border: 1px solid var(--gold-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.3s;
+}
+.card-wrapper:hover .card-back {
+  box-shadow: 0 0 18px rgba(201,168,76,0.5),
+              0 0 36px rgba(107,63,160,0.3);
+  border-color: var(--gold);
+}
+.card-back-pattern {
+  width: 80%; height: 80%;
+  border: 1px solid var(--gold-dim);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(201,168,76,0.04) 0px,
+    rgba(201,168,76,0.04) 2px,
+    transparent 2px,
+    transparent 10px
+  );
+}
+.card-back-symbol {
+  font-size: 1.8rem;
+  opacity: 0.6;
+  filter: drop-shadow(0 0 6px rgba(201,168,76,0.5));
+}
+
+/* 牌面（翻开后） */
+.card-front {
+  transform: rotateY(180deg);
+  background: linear-gradient(160deg, #1a1040, #0f0828);
+  border: 1px solid var(--gold);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+  gap: 6px;
+  box-shadow: 0 0 16px rgba(201,168,76,0.25);
+}
+/* 逆位牌面整体翻转 */
+.card-front.reversed { transform: rotateY(180deg) rotate(180deg); }
+
+.card-emoji {
+  font-size: 2rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(201,168,76,0.5));
+}
+.card-name-zh {
+  font-size: 0.65rem;
+  color: var(--gold-light);
+  letter-spacing: 0.05em;
+  text-align: center;
+  line-height: 1.3;
+}
+.card-orientation-badge {
+  font-size: 0.5rem;
+  padding: 2px 6px;
+  border-radius: 8px;
+  letter-spacing: 0.05em;
+}
+.card-orientation-badge.upright {
+  background: rgba(201,168,76,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.3);
+}
+.card-orientation-badge.reversed {
+  background: rgba(107,63,160,0.2);
+  color: var(--purple-light);
+  border: 1px solid rgba(107,63,160,0.4);
+}
+
+/* 进度条 */
+.selection-progress {
+  text-align: center;
+  color: var(--silver-dim);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+}
+.selection-progress .count { color: var(--gold-light); font-size: 1.1rem; }
+
+/* 位置标签 */
+.position-label {
+  text-align: center;
+  font-size: 0.6rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+/* ── Phase 3: Reading ─────────────────────────────────────── */
+#phase-reading {
+  padding-top: 30px;
+  gap: 24px;
+  padding-bottom: 60px;
+}
+
+/* 牌阵导航（顶部小缩略图） */
+.spread-nav {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 16px;
+  width: 100%;
+}
+
+.nav-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: var(--transition);
+}
+.nav-card:hover {
+  background: rgba(201,168,76,0.08);
+  border-color: rgba(201,168,76,0.3);
+}
+.nav-card.active {
+  background: rgba(201,168,76,0.12);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(201,168,76,0.2);
+}
+.nav-card .nav-emoji {
+  font-size: 1.5rem;
+  transition: transform 0.3s;
+}
+.nav-card.reversed-card .nav-emoji { transform: rotate(180deg); }
+.nav-card .nav-name {
+  font-size: 0.6rem;
+  color: var(--silver-dim);
+  letter-spacing: 0.05em;
+}
+.nav-card.active .nav-name { color: var(--gold); }
+.nav-card .nav-pos {
+  font-size: 0.5rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.05em;
+}
+.nav-card .nav-badge {
+  font-size: 0.45rem;
+  padding: 1px 5px;
+  border-radius: 6px;
+}
+.nav-card .nav-badge.upright {
+  background: rgba(201,168,76,0.15);
+  color: var(--gold);
+}
+.nav-card .nav-badge.reversed {
+  background: rgba(107,63,160,0.2);
+  color: var(--purple-light);
+}
+
+/* 解读主面板 */
+.reading-display {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 20px;
+  padding: 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+.reading-card-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+
+.reading-card-emoji-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.reading-main-emoji {
+  font-size: 3.5rem;
+  filter: drop-shadow(0 0 12px rgba(201,168,76,0.5));
+  display: block;
+  transition: transform 0.4s;
+}
+.reading-main-emoji.reversed { transform: rotate(180deg); }
+
+.reading-card-info { flex: 1; }
+.reading-card-name {
+  font-family: 'Cinzel', 'Noto Serif SC', serif;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+.reading-card-name-en {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  color: var(--silver-dim);
+  letter-spacing: 0.15em;
+  margin-top: 2px;
+}
+.reading-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.meta-tag {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.08em;
+}
+.meta-suit { background: rgba(107,63,160,0.2); color: var(--purple-light); border: 1px solid rgba(107,63,160,0.3); }
+.meta-element { background: rgba(255,255,255,0.05); color: var(--silver-dim); border: 1px solid rgba(255,255,255,0.1); }
+.meta-position { background: rgba(201,168,76,0.08); color: var(--gold-dim); border: 1px solid rgba(201,168,76,0.2); }
+.meta-upright { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+.meta-reversed { background: rgba(107,63,160,0.2); color: var(--purple-light); border: 1px solid rgba(107,63,160,0.4); }
+
+/* 关键词 */
+.keywords-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.kw-chip {
+  font-size: 0.72rem;
+  padding: 4px 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  color: var(--silver-dim);
+  border: 1px solid rgba(255,255,255,0.08);
+  letter-spacing: 0.05em;
+}
+
+/* 核心牌义 */
+.reading-brief {
+  font-size: 1rem;
+  color: var(--silver);
+  line-height: 1.9;
+  margin-bottom: 24px;
+  padding: 14px 18px;
+  border-left: 2px solid var(--gold);
+  background: rgba(201,168,76,0.05);
+  border-radius: 0 10px 10px 0;
+  font-style: italic;
+}
+
+/* Tab 切换 */
+.reading-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding-bottom: 0;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 8px 18px;
+  background: transparent;
+  border: none;
+  color: var(--silver-dim);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: var(--transition);
+}
+.tab-btn:hover { color: var(--silver); }
+.tab-btn.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* 解读内容 */
+.reading-content {
+  font-size: 0.95rem;
+  line-height: 2;
+  color: var(--silver-dim);
+  animation: fadeIn 0.35s ease;
+}
+.reading-content p { margin-bottom: 8px; }
+
+/* 底部操作栏 */
+.action-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+/* ── 占卜中进度提示 ───────────────────────────────────────── */
+.flip-progress {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+.flip-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  transition: var(--transition);
+}
+.flip-dot.done {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(201,168,76,0.6);
+}
+
+/* ── 翻牌完成过渡提示 ─────────────────────────────────────── */
+.all-flipped-msg {
+  text-align: center;
+  color: var(--gold-dim);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  animation: fadeIn 0.5s ease;
+}
+
+/* ── 响应式 ───────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .reading-display { padding: 20px 16px; }
+  .reading-card-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .reading-main-emoji { font-size: 2.8rem; }
+  .spread-nav { gap: 8px; padding: 12px; }
+  .card-inner { width: 72px; height: 120px; }
+  .spread-three .card-inner { width: 90px; height: 148px; }
+  .spread-single .card-inner { width: 110px; height: 180px; }
+}

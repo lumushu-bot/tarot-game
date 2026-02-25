@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>神秘塔罗 · Mystic Tarot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 星空背景 -->
+<canvas id="starfield"></canvas>
+
+<div id="app">
+
+  <!-- ══════════════════════════════════════════════════════
+       Phase 1 · Landing — 首页
+       ══════════════════════════════════════════════════════ -->
+  <section id="phase-landing" class="phase active">
+
+    <div class="moon-deco"></div>
+
+    <div>
+      <div class="title-cn">神秘塔罗</div>
+      <div class="title-en">Mystic Tarot Reading</div>
+    </div>
+
+    <div class="title-divider">✦ &nbsp; 洞见内心，指引未来 &nbsp; ✦</div>
+
+    <div class="spread-selector">
+      <div class="spread-label">选择占卜牌阵</div>
+      <div class="spread-options">
+        <button class="spread-btn active" data-spread="single">单张牌</button>
+        <button class="spread-btn" data-spread="three">三张牌</button>
+        <button class="spread-btn" data-spread="celtic">凯尔特十字</button>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-start">✦ &nbsp; 开始占卜 &nbsp; ✦</button>
+
+    <p style="font-size:0.75rem;color:var(--silver-dim);letter-spacing:0.08em;margin-top:-8px;">
+      深呼吸，将你的问题带入心中
+    </p>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       Phase 2 · Selection — 选牌 / 翻牌
+       ══════════════════════════════════════════════════════ -->
+  <section id="phase-selection" class="phase">
+
+    <div class="selection-header">
+      <div class="spread-title" id="spread-type-label">— 三张牌 · 过去·现在·未来 —</div>
+      <p class="guide-text" id="guide-text">
+        凝视牌背，感受你的直觉，<br>依次点击翻开属于你的牌
+      </p>
+    </div>
+
+    <!-- 翻牌进度点 -->
+    <div class="flip-progress" id="flip-progress"></div>
+
+    <!-- 牌阵 -->
+    <div class="card-spread" id="card-spread"></div>
+
+    <!-- 进度文字 -->
+    <div class="selection-progress">
+      已翻开 <span class="count" id="flip-count">0</span>
+      ／<span id="flip-total">3</span> 张
+    </div>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       Phase 3 · Reading — 解牌
+       ══════════════════════════════════════════════════════ -->
+  <section id="phase-reading" class="phase">
+
+    <!-- 牌阵导航 -->
+    <div class="spread-nav" id="spread-nav"></div>
+
+    <!-- 解牌主内容 -->
+    <div class="reading-display" id="reading-display"></div>
+
+    <!-- 底部操作 -->
+    <div class="action-bar">
+      <button class="btn-secondary" id="btn-restart">↺ &nbsp; 重新占卜</button>
+    </div>
+
+  </section>
+
+</div><!-- /#app -->
+
+<!-- 脚本 -->
+<script src="data/cards.js"></script>
+<script src="js/reading.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
